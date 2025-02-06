@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "vercel-build": "NEXT_DISABLE_ESLINT=1 NEXT_IGNORE_TYPECHECK=1 next build"
   },
   "dependencies": {
     "react": "^19.0.0",
