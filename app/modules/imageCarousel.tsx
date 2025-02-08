@@ -41,7 +41,7 @@ useEffect(()=>{
 
 },[isPaused, autoPlay, autoPlayDelay, handleClick])
 
-
+console.log("activeIndex",activeIndex)
   return (
     <div 
     className="w-full max-w-3xl mx-auto p-4"
