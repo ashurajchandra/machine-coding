@@ -34,7 +34,7 @@ const images = [
 const MyImages = () =>{
 
     return(
-        <ImageCarousel images={images}/>
+        <ImageCarousel autoPlay={true} autoPlayDelay={500} images={images}/>
     )
 }
 

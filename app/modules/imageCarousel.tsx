@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 interface CarouselImage {
   src: string;
@@ -10,17 +10,19 @@ interface CarouselImage {
 interface ImageCarouselProps {
   images: CarouselImage[];
   activeImage?: CarouselImage;
+  autoPlay: boolean;
+  autoPlayDelay: number;
 }
 
 const ImageCarousel = (props: ImageCarouselProps) => {
-  const { images } = props;
+  const { images, autoPlay=true, autoPlayDelay=300 } = props;
   const [activeIndex, setActiveIndex] = useState(0);
-  
-  const handleClick = useCallback ((usecase: 'dot' | 'prev' | 'next', index:number)=>{
+  const [isPaused, setIsPaused] = useState(false)
+  const handleClick = useCallback ((usecase: 'dot' | 'prev' | 'next', index?:number)=>{
     const lastIndex = images.length-1 ;
 
     setActiveIndex((prevIndex:number)=>{
-      if(usecase === 'dot') return index;
+      if(usecase === 'dot' && index!= undefined) return  index;
       if(usecase === 'prev') return prevIndex === 0 ? lastIndex: prevIndex-1;
       if(usecase === 'next') return prevIndex ===lastIndex? 0 : prevIndex +1;
       return prevIndex
@@ -28,14 +30,29 @@ const ImageCarousel = (props: ImageCarouselProps) => {
 
 },[images.length])
 
+useEffect(()=>{
+  if(!autoPlay || isPaused) return;
+
+  const intervalId = setInterval(()=>{
+   handleClick('next')
+  },autoPlayDelay)
+
+  return ()=>clearInterval(intervalId)
+
+},[isPaused, autoPlay, autoPlayDelay, handleClick])
+
 
   return (
-    <div className="w-full max-w-3xl mx-auto p-4">
+    <div 
+    className="w-full max-w-3xl mx-auto p-4"
+    onMouseEnter={() => setIsPaused(true)} 
+    onMouseLeave={() => setIsPaused(false)}
+    >
       <div className="relative">
         {/* Main Image Container */}
         <div className="relative h-[400px] rounded-lg overflow-hidden">
           {/* Navigation Buttons */}
-          <NavButton direction='prev' onClick={()=>handleClick('prev', activeIndex)} />
+          <NavButton direction='prev' onClick={()=>handleClick('prev')} />
           
           {/* Images */}
           <div className="h-full">
@@ -50,7 +67,7 @@ const ImageCarousel = (props: ImageCarouselProps) => {
               />
             ))}
           </div>
-          <NavButton direction='next' onClick={()=>handleClick('next', activeIndex)} />
+          <NavButton direction='next' onClick={()=>handleClick('next')} />
         </div>
 
         {/* Dots Navigation */}
