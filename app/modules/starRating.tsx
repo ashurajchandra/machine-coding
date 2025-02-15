@@ -50,6 +50,12 @@ const StarRating = (props:Props) =>{
             setPrevStateData(localStars)
         }
     }
+    const handleMouseLeave = () =>{
+        if(!isClicked){
+            setCurrentActiveStars(prevStateData)
+        }
+        setIsClicked(false)
+    }
 
     return (
         <div className='flex gap-[3px]'
@@ -61,7 +67,7 @@ const StarRating = (props:Props) =>{
                   onClick={()=>updateStars(id, true)} 
                   className="w-[30px] h-[30px]" key={id} 
                   onMouseEnter={()=>updateStars(id, false)}
-                  onMouseLeave = {()=> !isClicked && setCurrentActiveStars(prevStateData)}
+                  onMouseLeave = {handleMouseLeave}
                   />
              )) 
             }
